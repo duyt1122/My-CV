@@ -38,5 +38,16 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
+    public User updateUser(User user) throws IdInvalidException{
+        User currentUser = this.findById(user.getId());
+        if(currentUser != null) {
+            currentUser.setName(user.getName());
+            currentUser.setEmail(user.getEmail());
+            currentUser.setPassword(user.getPassword());
+        }
+        return this.userRepository.save(currentUser);
+    }
+
+
 
 }

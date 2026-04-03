@@ -1,5 +1,7 @@
 package vn.hoidanit.jobhunter.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.error.IdInvalidException;
@@ -17,24 +19,30 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/user")
-    public User createUser(@RequestBody User user){
-       return this.userService.createUser(user);
+    @PostMapping("/users")
+    public ResponseEntity<User> createUser(@RequestBody User user){
+       return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.createUser(user));
     }
 
-    @DeleteMapping("user/{id}")
-    public void deleteUser(@PathVariable("id") long id){
+    @DeleteMapping("users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id){
         this.userService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Delete successful");
     }
 
-    @GetMapping("/user/{id}")
-    public User findById(@PathVariable("id") long id) throws IdInvalidException{
-            return this.userService.findById(id);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> findById(@PathVariable("id") long id) throws IdInvalidException{
+            return ResponseEntity.status(HttpStatus.OK).body(this.userService.findById(id));
     }
 
-    @GetMapping("/user")
-    public List<User> findAllUser(){
-        return this.userService.finaAllUsers();
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> findAllUser(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.finaAllUsers());
+    }
+
+    @PutMapping("users")
+    public ResponseEntity<User> updateUser(@RequestBody User user) throws IdInvalidException{
+        return ResponseEntity.ok(this.userService.updateUser(user));
     }
 
 
