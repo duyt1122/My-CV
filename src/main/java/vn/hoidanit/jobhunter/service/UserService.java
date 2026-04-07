@@ -1,16 +1,14 @@
 package vn.hoidanit.jobhunter.service;
 
-import org.springframework.data.crossstore.ChangeSetPersister;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.error.IdInvalidException;
 import vn.hoidanit.jobhunter.repository.UserRepository;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserService {
@@ -52,6 +50,10 @@ public class UserService {
             currentUser.setPassword(user.getPassword());
         }
         return this.userRepository.save(currentUser);
+    }
+
+    public User findByEmail(String email){
+        return this.userRepository.findByEmail(email);
     }
 
 
