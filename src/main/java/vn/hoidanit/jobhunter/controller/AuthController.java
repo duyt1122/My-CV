@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.request.LoginDTO;
 
 @RestController
@@ -24,7 +25,7 @@ public class AuthController {
     }
     
     @PostMapping("/login")
-    public String login(@RequestBody LoginDTO loginDTO){
+    public String login(@Valid @RequestBody LoginDTO loginDTO){
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword());
 
         Authentication authenticatioin = this.authenthicationManagerBuilder.getObject().authenticate(auth);

@@ -1,7 +1,13 @@
 package vn.hoidanit.jobhunter.error;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -11,12 +17,26 @@ import vn.hoidanit.jobhunter.domain.response.RestResponse;
 public class GlobalException {
     
     @ExceptionHandler(IdInvalidException.class)
-    public ResponseEntity<RestResponse<Object>> handleIdInvaidException(IdInvalidException ex){
+    public ResponseEntity<RestResponse<Object>> handleIdInvaidException(Exception ex){
 
         RestResponse<Object> res = new RestResponse<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
         res.setError("CALL API FAILD");
         res.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<RestResponse<Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
+        RestResponse<Object> res = new RestResponse<>();
+        BindingResult bindingResult = ex.getBindingResult();
+        List<FieldError> filedErrors = bindingResult.getFieldErrors();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError(ex.getBody().getDetail());
+        List<String> error  = filedErrors.stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
+        res.setMessage(error.size() > 1 ? error : error.get(0));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+
     }
 }
